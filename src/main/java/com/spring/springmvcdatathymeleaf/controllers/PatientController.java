@@ -34,10 +34,8 @@ public class PatientController {
                               @RequestParam(defaultValue = "id") String sortField,
                               @RequestParam(defaultValue = "asc") String sortDirection,
                               @RequestParam(required = false) String keyword) {
-        // Fetch patient data
         Page<PatientResponseDto> patientPage = patientService.getPatientByKeyword(page, size, sortField, sortDirection, keyword);
 
-        // Calculate pagination values
         int currentPage = patientPage.getNumber();
         int totalPages = patientPage.getTotalPages();
         long totalItems = patientPage.getTotalElements();
@@ -49,7 +47,6 @@ public class PatientController {
 
         long end = Math.min((long) page * size + patientPage.getContent().size(), totalItems);
 
-        // Add attributes to the model
         model.addAttribute("patients", patientPage.getContent());
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("totalPages", totalPages);
@@ -102,7 +99,7 @@ public class PatientController {
                 patientResponse.malade()
         );
         model.addAttribute("patient", patientRequest);
-        model.addAttribute("patientId", id); // Add this
+        model.addAttribute("patientId", id);
         model.addAttribute("isCreatePage", false);
         return CREATE_OR_UPDATE_PATIENT_PAGE;
     }
