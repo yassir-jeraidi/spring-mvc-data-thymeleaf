@@ -36,10 +36,17 @@ public class PatientService {
         return patientMapper.patientPageToPatientResponseDtoPage(patientPage);
     }
 
-    public Page<PatientResponseDto> getAllPaginated(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Patient> patientPage = patientRepository.findAll(pageable);
 
+    public Page<PatientResponseDto> getPatientByKeyword(int page, int size, String sortField, String sortDirection, String keyword) {
+        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
+                Sort.by(sortField).ascending() : Sort.by(sortField).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Patient> patientPage;
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            patientPage = patientRepository.findByNomLike("%" + keyword.trim() + "%", pageable);
+        } else {
+            patientPage = patientRepository.findAll(pageable);
+        }
         return patientMapper.patientPageToPatientResponseDtoPage(patientPage);
     }
 
