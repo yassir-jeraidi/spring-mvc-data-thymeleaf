@@ -25,12 +25,12 @@ public class PatientController {
     private final String REDIRECT_TO_PATIENTS_PAGE = "redirect:/patients";
     private final String CREATE_OR_UPDATE_PATIENT_PAGE = "patients/create-or-update";
     private final String LIST_PATIENTS_PAGE = "patients/index";
-    private final String VIEW_PATIENT_PAGE = "patients/create-or-update";
+    private final String VIEW_PATIENT_PAGE = "patients/view";
 
     @GetMapping
     public String getPatients(Model model,
                               @RequestParam(defaultValue = "0") int page,
-                              @RequestParam(defaultValue = "10") int size,
+                              @RequestParam(defaultValue = "5") int size,
                               @RequestParam(defaultValue = "id") String sortField,
                               @RequestParam(defaultValue = "asc") String sortDirection,
                               @RequestParam(required = false) String keyword) {
