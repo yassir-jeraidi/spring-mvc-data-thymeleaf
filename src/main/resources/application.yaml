@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: spring-mvc-data-thymeleaf
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/patients?createDatabaseIfNotExist=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update
