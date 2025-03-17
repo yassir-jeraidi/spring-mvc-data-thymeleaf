@@ -66,7 +66,11 @@ public class PatientService {
         Patient patientToUpdate = patientRepository.findById(id).orElseThrow(
                 () -> new RuntimeException("Patient not found")
         );
-        Patient savedPatient = patientRepository.save(patientMapper.patientRequestDtoToPatient(patientRequestDto));
+        patientToUpdate.setNom(patientRequestDto.nom());
+        patientToUpdate.setDateNaissance(patientRequestDto.dateNaissance());
+        patientToUpdate.setMalade(patientRequestDto.malade());
+        patientToUpdate.setScore(patientRequestDto.score());
+        Patient savedPatient = patientRepository.save(patientToUpdate);
         return patientMapper.patientToPatientResponseDto(savedPatient);
     }
 

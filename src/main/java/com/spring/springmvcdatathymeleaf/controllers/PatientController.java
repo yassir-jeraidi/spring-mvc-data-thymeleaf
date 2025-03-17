@@ -67,7 +67,7 @@ public class PatientController {
             patientService.save(patient);
         } catch (Exception e) {
             System.err.println("Error saving patient: " + e.getMessage());
-            throw e; // Or handle it appropriately
+            throw e;
         }
         return REDIRECT_TO_PATIENTS_PAGE;
     }
