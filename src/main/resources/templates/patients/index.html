@@ -61,6 +61,13 @@
                             <span th:if="${sortField == 'malade'}" th:text="${sortDirection == 'asc' ? '↑' : '↓'}"></span>
                         </a>
                     </th>
+                    <th scope="col">
+                        <a th:href="@{/patients(page=${currentPage}, size=${size}, sortField='score', sortDirection=${sortField == 'score' ? reverseSortDirection : 'asc'}, keyword=${keyword})}"
+                           class="text-white text-decoration-none">
+                            Score
+                            <span th:if="${sortField == 'score'}" th:text="${sortDirection == 'asc' ? '↑' : '↓'}"></span>
+                        </a>
+                    </th>
                     <th scope="col">Actions</th>
                 </tr>
                 </thead>
@@ -69,6 +76,7 @@
                     <td th:text="${patient.id}"></td>
                     <td th:text="${patient.nom ?: 'Unknown'}"></td>
                     <td th:text="${patient.malade ? 'Yes' : 'No'}"></td>
+                    <td th:text="${patient.score}"></td>
                     <td>
                         <div>
                             <a th:href="@{/patients/{id}(id=${patient.id})}" class="btn btn-sm btn-primary">View</a>
