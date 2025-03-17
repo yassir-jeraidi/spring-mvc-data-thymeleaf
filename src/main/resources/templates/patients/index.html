@@ -91,7 +91,7 @@
                     </td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(patients)}">
-                    <td colspan="3" class="text-center py-4">No patients found</td>
+                    <td colspan="5" class="text-center py-4">No patients found</td>
                 </tr>
                 </tbody>
             </table>
@@ -102,7 +102,7 @@
         <div class="pagination-info">
             Showing
             <span th:text="${currentPage * size + 1}"></span> to
-            <span th:text="${#numbers.min(currentPage * size + patients.size(), totalItems)}"></span> of
+            <span th:text="${end}"></span> of
             <span th:text="${totalItems}"></span> patients
         </div>
         <nav aria-label="Patient pagination">
@@ -114,7 +114,7 @@
                         <span aria-hidden="true">«</span>
                     </a>
                 </li>
-                <th:block th:each="i : ${#numbers.sequence(#numbers.max(0, currentPage - 2), #numbers.min(totalPages - 1, currentPage + 2))}">
+                <th:block th:each="i : ${pageNumbers}">
                     <li class="page-item" th:classappend="${i == currentPage ? 'active' : ''}">
                         <a class="page-link"
                            th:href="@{/patients(page=${i}, size=${size}, sortField=${sortField}, sortDirection=${sortDirection}, keyword=${keyword})}"

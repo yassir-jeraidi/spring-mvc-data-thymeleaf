@@ -12,6 +12,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 @Controller
 @RequestMapping("/patients")
 @RequiredArgsConstructor
@@ -30,16 +34,34 @@ public class PatientController {
                               @RequestParam(defaultValue = "id") String sortField,
                               @RequestParam(defaultValue = "asc") String sortDirection,
                               @RequestParam(required = false) String keyword) {
+        // Fetch patient data
         Page<PatientResponseDto> patientPage = patientService.getPatientByKeyword(page, size, sortField, sortDirection, keyword);
+
+        // Calculate pagination values
+        int currentPage = patientPage.getNumber();
+        int totalPages = patientPage.getTotalPages();
+        long totalItems = patientPage.getTotalElements();
+        int startPage = Math.max(0, currentPage - 2);
+        int endPage = Math.min(totalPages - 1, currentPage + 2);
+        List<Integer> pageNumbers = IntStream.rangeClosed(startPage, endPage)
+                .boxed()
+                .collect(Collectors.toList());
+
+        long end = Math.min((long) page * size + patientPage.getContent().size(), totalItems);
+
+        // Add attributes to the model
         model.addAttribute("patients", patientPage.getContent());
-        model.addAttribute("currentPage", patientPage.getNumber());
-        model.addAttribute("totalPages", patientPage.getTotalPages());
-        model.addAttribute("totalItems", patientPage.getTotalElements());
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("totalItems", totalItems);
         model.addAttribute("size", size);
         model.addAttribute("sortField", sortField);
         model.addAttribute("sortDirection", sortDirection);
         model.addAttribute("reverseSortDirection", sortDirection.equals("asc") ? "desc" : "asc");
         model.addAttribute("keyword", keyword);
+        model.addAttribute("end", end);
+        model.addAttribute("pageNumbers", pageNumbers);
+
         return LIST_PATIENTS_PAGE;
     }
 
