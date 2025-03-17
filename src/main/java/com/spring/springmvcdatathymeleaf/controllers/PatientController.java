@@ -19,7 +19,9 @@ public class PatientController {
 
     private final PatientService patientService;
     private final String REDIRECT_TO_PATIENTS_PAGE = "redirect:/patients";
-    private final String CREATE_OR_UPDATE_PATIENTS_PAGE = "patients/create-or-update";
+    private final String CREATE_OR_UPDATE_PATIENT_PAGE = "patients/create-or-update";
+    private final String LIST_PATIENTS_PAGE = "patients/index";
+    private final String VIEW_PATIENT_PAGE = "patients/create-or-update";
 
     @GetMapping
     public String getPatients(Model model,
@@ -38,37 +40,33 @@ public class PatientController {
         model.addAttribute("sortDirection", sortDirection);
         model.addAttribute("reverseSortDirection", sortDirection.equals("asc") ? "desc" : "asc");
         model.addAttribute("keyword", keyword);
-        return "patients/index";
+        return LIST_PATIENTS_PAGE;
     }
 
     @GetMapping("/create")
     public String createPatient(Model model) {
         model.addAttribute("isCreatePage", true);
-        model.addAttribute("patient", new PatientRequestDto("", null, 0 , false));
-        return CREATE_OR_UPDATE_PATIENTS_PAGE;
+        model.addAttribute("patient", new PatientRequestDto("", null, 0, false));
+        return CREATE_OR_UPDATE_PATIENT_PAGE;
     }
 
     @GetMapping("/{id}")
-    public String viewPatient(Model model , @PathVariable Long id) {
+    public String viewPatient(Model model, @PathVariable Long id) {
         PatientResponseDto patient = patientService.getById(id);
         model.addAttribute("patient", patient);
-        return "patients/view";
+        return VIEW_PATIENT_PAGE;
     }
 
     @PostMapping
-    public String savePatient(Model model, @Valid @ModelAttribute("patient") PatientRequestDto patient, BindingResult bindingResult) {
+    public String savePatient(Model model, @Valid @ModelAttribute("patient") PatientRequestDto patient, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             System.out.println("Validation errors: " + bindingResult.getAllErrors());
             model.addAttribute("isCreatePage", true);
             model.addAttribute("patient", patient);
-            return CREATE_OR_UPDATE_PATIENTS_PAGE;
+            return CREATE_OR_UPDATE_PATIENT_PAGE;
         }
-        try {
-            patientService.save(patient);
-        } catch (Exception e) {
-            System.err.println("Error saving patient: " + e.getMessage());
-            throw e;
-        }
+        patientService.save(patient);
+        redirectAttributes.addFlashAttribute("message", "Patient saved successfully");
         return REDIRECT_TO_PATIENTS_PAGE;
     }
 
@@ -84,24 +82,26 @@ public class PatientController {
         model.addAttribute("patient", patientRequest);
         model.addAttribute("patientId", id); // Add this
         model.addAttribute("isCreatePage", false);
-        return CREATE_OR_UPDATE_PATIENTS_PAGE;
+        return CREATE_OR_UPDATE_PATIENT_PAGE;
     }
 
     @PutMapping("/{id}")
-    public String updatePatient(Model model , @PathVariable Long id,
+    public String updatePatient(Model model, @PathVariable Long id,
                                 @Valid @ModelAttribute("patient") PatientRequestDto patientRequestDto,
-                                BindingResult bindingResult) {
+                                BindingResult bindingResult,
+                                RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("isCreatePage", false);
             model.addAttribute("patient", patientRequestDto);
-            return "patients/create-or-update";
+            return CREATE_OR_UPDATE_PATIENT_PAGE;
         }
         patientService.updateById(id, patientRequestDto);
+        redirectAttributes.addFlashAttribute("message", "Patient updated successfully");
         return REDIRECT_TO_PATIENTS_PAGE;
     }
 
     @DeleteMapping("/{id}")
-    public String deletePatient(@PathVariable Long id , RedirectAttributes redirectAttributes) {
+    public String deletePatient(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         patientService.delete(id);
         redirectAttributes.addFlashAttribute("message", "Patient deleted successfully");
         return REDIRECT_TO_PATIENTS_PAGE;
