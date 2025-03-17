@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/global}">
 <head>
     <meta charset="UTF-8">
     <title>Patient Details</title>
@@ -11,12 +12,15 @@
         body {
             background-color: #f8f9fa;
         }
+
         .container {
             max-width: 800px;
         }
+
         .card {
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
+
         .detail-label {
             font-weight: 500;
             color: #495057;
@@ -24,7 +28,7 @@
     </style>
 </head>
 <body>
-<div class="container mt-5 mb-5">
+<div class="container mt-5 mb-5" layout:fragment="content">
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h2 class="h4 mb-0">Patient Details</h2>
