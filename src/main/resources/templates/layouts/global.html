@@ -42,9 +42,19 @@
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{/patients}">Patients</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
                     <a class="nav-link" th:href="@{/patients/create}">Add Patient</a>
                 </li>
+            </ul>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item d-flex justify-content-center align-items-center gap-3">
+                    <span class="text-white" th:text="${#authentication.name}"></span>
+                    <span class="text-secondary">|</span>
+                    <form th:action="@{/logout}" method="post">
+                        <button class="nav-link btn btn-danger rounded-pill">Logout</button>
+                    </form>
+                </li>
+
             </ul>
         </div>
     </div>
