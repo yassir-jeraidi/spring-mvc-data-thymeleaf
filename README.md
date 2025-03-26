@@ -3,6 +3,7 @@
 A Spring Boot application for managing patient records with CRUD operations, pagination, sorting, and search functionality.
 
 ## Result (demo)
+⚠️ V1 without security 
 
 https://github.com/user-attachments/assets/5c15c922-32d6-4002-98d6-95322f497714
 
