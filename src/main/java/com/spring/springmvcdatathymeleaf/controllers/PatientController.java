@@ -6,6 +6,7 @@ import com.spring.springmvcdatathymeleaf.services.PatientService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Controller
-@RequestMapping("/patients")
+@RequestMapping("patients")
 @RequiredArgsConstructor
 public class PatientController {
 
@@ -63,6 +64,7 @@ public class PatientController {
     }
 
     @GetMapping("/create")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String createPatient(Model model) {
         model.addAttribute("isCreatePage", true);
         model.addAttribute("patient", new PatientRequestDto("", null, 0, false));
@@ -77,6 +79,7 @@ public class PatientController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String savePatient(Model model, @Valid @ModelAttribute("patient") PatientRequestDto patient, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             System.out.println("Validation errors: " + bindingResult.getAllErrors());
@@ -90,6 +93,7 @@ public class PatientController {
     }
 
     @GetMapping("/edit/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String editPatient(Model model, @PathVariable Long id) {
         PatientResponseDto patientResponse = patientService.getById(id);
         PatientRequestDto patientRequest = new PatientRequestDto(
@@ -105,6 +109,7 @@ public class PatientController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String updatePatient(Model model, @PathVariable Long id,
                                 @Valid @ModelAttribute("patient") PatientRequestDto patientRequestDto,
                                 BindingResult bindingResult,
@@ -119,6 +124,7 @@ public class PatientController {
         return REDIRECT_TO_PATIENTS_PAGE;
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public String deletePatient(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         patientService.delete(id);
